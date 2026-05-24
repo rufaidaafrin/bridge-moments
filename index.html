@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bridge Moments</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="workspace" aria-label="Bridge Moments app">
+        <aside class="side-panel">
+          <div class="brand-lockup">
+            <div class="brand-mark" aria-hidden="true"><span></span><span></span></div>
+            <div>
+              <p class="eyebrow">What happens next?</p>
+              <h1>Bridge Moments</h1>
+            </div>
+          </div>
+
+          <p class="mission">
+            An AI transition translator for real-life moments: previews, sensory
+            warnings, speech support, plan-change rescue, communication cards,
+            and support notes.
+          </p>
+
+          <form id="momentForm" class="moment-form">
+            <label for="scenario">Moment to prepare for</label>
+            <textarea id="scenario" rows="5">Tomorrow we are going to the dentist. My sister gets scared when people touch her mouth and when tools make sounds.</textarea>
+
+            <div class="field-grid">
+              <label>
+                Name
+                <input id="personName" value="Maya" />
+              </label>
+              <label>
+                Support style
+                <select id="supportStyle">
+                  <option value="gentle">Gentle</option>
+                  <option value="direct">Direct</option>
+                  <option value="extra-simple">Extra simple</option>
+                </select>
+              </label>
+            </div>
+
+            <label for="sensory">Known sensory needs</label>
+            <input id="sensory" value="loud sounds, people too close, waiting" />
+
+            <label for="changeInput">If the plan suddenly changes</label>
+            <input id="changeInput" value="The appointment is delayed and we have to wait 20 minutes." />
+
+            <button class="primary-action" type="submit">
+              <span aria-hidden="true">+</span>
+              Build support kit
+            </button>
+          </form>
+        </aside>
+
+        <section class="main-panel">
+          <nav class="tabs" aria-label="Bridge Moments views">
+            <button class="tab active" data-view="story" type="button">Story</button>
+            <button class="tab" data-view="rescue" type="button">Rescue</button>
+            <button class="tab" data-view="translate" type="button">Translate</button>
+            <button class="tab" data-view="say" type="button">Say</button>
+            <button class="tab" data-view="choices" type="button">Choices</button>
+            <button class="tab" data-view="passport" type="button">Passport</button>
+          </nav>
+
+          <section class="view active" id="storyView">
+            <div class="view-header">
+              <div>
+                <p class="eyebrow">Personal visual preview</p>
+                <h2 id="storyTitle">Dentist visit</h2>
+              </div>
+              <button class="icon-button" id="readStory" type="button" aria-label="Read story aloud" title="Read aloud">
+                <span class="play-glyph" aria-hidden="true"></span>
+              </button>
+            </div>
+
+            <div class="story-grid" id="storyGrid"></div>
+
+            <div class="support-strip">
+              <article class="mini-panel">
+                <p class="eyebrow">Sensory forecast</p>
+                <div id="forecastList" class="forecast-list"></div>
+              </article>
+              <article class="mini-panel">
+                <p class="eyebrow">First then</p>
+                <div class="first-then">
+                  <div><strong>First</strong><span id="firstStep">Drive there</span></div>
+                  <div><strong>Then</strong><span id="thenStep">Wait safely</span></div>
+                </div>
+              </article>
+            </div>
+          </section>
+
+          <section class="view" id="rescueView">
+            <div class="view-header">
+              <div>
+                <p class="eyebrow">Plan change rescue</p>
+                <h2>When things change</h2>
+              </div>
+              <button class="small-action" id="readRescue" type="button">Read</button>
+            </div>
+            <div class="rescue-layout">
+              <article class="rescue-card">
+                <span class="status-dot"></span>
+                <h3>The plan changed.</h3>
+                <p id="changeSummary">The appointment is delayed and we have to wait 20 minutes.</p>
+              </article>
+              <div class="rescue-steps" id="rescueSteps"></div>
+            </div>
+          </section>
+
+          <section class="view" id="translateView">
+            <div class="view-header">
+              <div>
+                <p class="eyebrow">EasyWorld translator</p>
+                <h2>Make confusing words simple</h2>
+              </div>
+              <button class="small-action" id="translateButton" type="button">Translate</button>
+            </div>
+            <div class="translator">
+              <label for="hardText">Paste a sign, note, instruction, or schedule</label>
+              <textarea id="hardText" rows="5">Please remain seated in the waiting area until the hygienist calls your name. The exam may include x-rays and cleaning.</textarea>
+              <div class="translation-output" id="translationOutput"></div>
+            </div>
+          </section>
+
+          <section class="view" id="choicesView">
+            <div class="view-header">
+              <div>
+                <p class="eyebrow">During the moment</p>
+                <h2>Communication board</h2>
+              </div>
+            </div>
+            <div class="choice-grid" id="choiceGrid"></div>
+          </section>
+
+          <section class="view" id="sayView">
+            <div class="view-header">
+              <div>
+                <p class="eyebrow">Speech and AAC bridge</p>
+                <h2>Understand what I mean</h2>
+              </div>
+              <button class="small-action" id="speakPhrase" type="button">Speak</button>
+            </div>
+            <div class="speech-layout">
+              <article class="phrase-builder">
+                <p id="phraseOutput">I want water.</p>
+                <div class="phrase-columns" id="phraseColumns"></div>
+              </article>
+              <article class="guess-panel">
+                <p class="eyebrow">Intent decoder</p>
+                <h3>When sounds, pointing, or objects are unclear</h3>
+                <div class="decoder-grid">
+                  <label for="soundInput">
+                    Sound heard
+                    <input id="soundInput" value="ss oo" placeholder="ex: wa, ba, ss oo" />
+                  </label>
+                  <label for="objectInput">
+                    Object or place
+                    <input id="objectInput" value="cup" placeholder="ex: cup, shoes, door" />
+                  </label>
+                  <label for="gestureInput">
+                    Gesture
+                    <select id="gestureInput">
+                      <option value="brought object">brought object</option>
+                      <option value="pointing">pointing</option>
+                      <option value="grabbing hand">grabbing hand</option>
+                      <option value="pushing away">pushing away</option>
+                      <option value="crying">crying</option>
+                    </select>
+                  </label>
+                  <button class="small-action" id="decodeButton" type="button">Decode</button>
+                </div>
+                <div class="decode-output" id="decodeOutput"></div>
+                <div class="clue-grid" id="clueGrid"></div>
+                <div class="guess-output" id="guessOutput"></div>
+              </article>
+            </div>
+          </section>
+
+          <section class="view" id="passportView">
+            <div class="view-header">
+              <div>
+                <p class="eyebrow">Shareable support card</p>
+                <h2>My Voice Passport</h2>
+              </div>
+              <button class="small-action" id="copyPassport" type="button">Copy</button>
+            </div>
+            <article class="passport-card">
+              <div class="passport-top">
+                <div class="avatar" aria-hidden="true">M</div>
+                <div>
+                  <h3 id="passportName">Maya</h3>
+                  <p>I understand best with short words, visuals, and time to answer.</p>
+                </div>
+              </div>
+              <div class="passport-list" id="passportList"></div>
+            </article>
+          </section>
+        </section>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
