@@ -272,7 +272,9 @@ select:focus {
 .decode-output,
 .assist-card,
 .now-step,
-.caregiver-setup {
+.caregiver-setup,
+.learning-panel,
+.pattern-card {
   border: 1px solid var(--line);
   background: #fffdf7;
 }
@@ -352,8 +354,33 @@ select:focus {
 }
 
 .now-step,
-.caregiver-setup {
+.caregiver-setup,
+.learning-panel {
   padding: 18px;
+}
+
+.learning-panel {
+  display: grid;
+  gap: 12px;
+}
+
+.pattern-list {
+  display: grid;
+  gap: 10px;
+}
+
+.pattern-card {
+  padding: 14px;
+  background: #f7f2e7;
+}
+
+.pattern-card strong {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.pattern-card span {
+  color: var(--muted);
 }
 
 .now-step-body {
@@ -698,6 +725,13 @@ select:focus {
 .guess-output strong {
   display: block;
   margin-bottom: 8px;
+}
+
+.confirm-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 10px;
 }
 
 .rescue-card {

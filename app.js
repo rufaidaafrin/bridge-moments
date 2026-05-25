@@ -145,6 +145,7 @@ const objectInput = document.querySelector("#objectInput");
 const gestureInput = document.querySelector("#gestureInput");
 const decodeButton = document.querySelector("#decodeButton");
 const decodeOutput = document.querySelector("#decodeOutput");
+const confirmRow = document.querySelector("#confirmRow");
 const assistCards = document.querySelector("#assistCards");
 const caregiverToggle = document.querySelector("#caregiverToggle");
 const caregiverSetup = document.querySelector("#caregiverSetup");
@@ -159,6 +160,8 @@ const currentStepText = document.querySelector("#currentStepText");
 const prevStep = document.querySelector("#prevStep");
 const nextStep = document.querySelector("#nextStep");
 const speakStep = document.querySelector("#speakStep");
+const patternList = document.querySelector("#patternList");
+const resetLearning = document.querySelector("#resetLearning");
 
 let currentPassportText = "";
 let selectedStarter = "I want";
@@ -167,6 +170,8 @@ let selectedClues = new Set();
 let assistCardData = loadAssistCards();
 let activeTemplate = templates.dentist;
 let currentStepIndex = 0;
+let learningData = loadLearningData();
+let lastDecodeContext = null;
 
 function loadAssistCards() {
   try {
@@ -180,6 +185,119 @@ function loadAssistCards() {
 function saveCustomCards() {
   const custom = assistCardData.slice(defaultAssistCards.length);
   localStorage.setItem("bridgeMomentsCards", JSON.stringify(custom));
+}
+
+function loadLearningData() {
+  try {
+    return JSON.parse(localStorage.getItem("bridgeMomentsLearning") || '{"events":[],"patterns":{}}');
+  } catch {
+    return { events: [], patterns: {} };
+  }
+}
+
+function saveLearningData() {
+  learningData.events = learningData.events.slice(-80);
+  localStorage.setItem("bridgeMomentsLearning", JSON.stringify(learningData));
+}
+
+function getContextLabel() {
+  return activeTemplate.title || "current moment";
+}
+
+function recordEvent(type, value) {
+  learningData.events.push({
+    type,
+    value,
+    context: getContextLabel(),
+    hour: new Date().getHours(),
+    timestamp: Date.now()
+  });
+  saveLearningData();
+  renderPatterns();
+}
+
+function patternKey(parts) {
+  return parts.filter(Boolean).join(" | ").toLowerCase();
+}
+
+function confirmPattern(meaning) {
+  if (!lastDecodeContext) return;
+  const key = patternKey([
+    lastDecodeContext.sound,
+    lastDecodeContext.object,
+    lastDecodeContext.gesture,
+    getContextLabel()
+  ]);
+
+  if (!learningData.patterns[key]) {
+    learningData.patterns[key] = {
+      sound: lastDecodeContext.sound,
+      object: lastDecodeContext.object,
+      gesture: lastDecodeContext.gesture,
+      context: getContextLabel(),
+      meanings: {}
+    };
+  }
+
+  learningData.patterns[key].meanings[meaning] = (learningData.patterns[key].meanings[meaning] || 0) + 1;
+  recordEvent("confirmed", meaning);
+  saveLearningData();
+  renderPatterns();
+  renderPassport(activeTemplate, document.querySelector("#personName").value || "Maya", document.querySelector("#sensory").value || "clear space");
+}
+
+function getTopPatterns() {
+  return Object.values(learningData.patterns)
+    .map((pattern) => {
+      const [meaning, count] = Object.entries(pattern.meanings).sort((a, b) => b[1] - a[1])[0] || ["unknown", 0];
+      return { ...pattern, meaning, count };
+    })
+    .filter((pattern) => pattern.count > 0)
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 4);
+}
+
+function getFrequentCardUses() {
+  const counts = {};
+  learningData.events
+    .filter((event) => event.type === "card")
+    .forEach((event) => {
+      const key = `${event.value} in ${event.context}`;
+      counts[key] = (counts[key] || 0) + 1;
+    });
+
+  return Object.entries(counts)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 3)
+    .map(([label, count]) => ({ label, count }));
+}
+
+function renderPatterns() {
+  const patterns = getTopPatterns();
+  const cardUses = getFrequentCardUses();
+  const cards = [];
+
+  patterns.forEach((pattern) => {
+    cards.push(`
+      <div class="pattern-card">
+        <strong>${escapeHtml(pattern.meaning)} (${pattern.count} confirmations)</strong>
+        <span>${escapeHtml([pattern.sound && `"${pattern.sound}"`, pattern.object, pattern.gesture, pattern.context].filter(Boolean).join(" + "))}</span>
+      </div>
+    `);
+  });
+
+  cardUses.forEach((use) => {
+    cards.push(`
+      <div class="pattern-card">
+        <strong>${escapeHtml(use.label)}</strong>
+        <span>Used ${use.count} time${use.count === 1 ? "" : "s"}. Keep this card easy to reach.</span>
+      </div>
+    `);
+  });
+
+  patternList.innerHTML = cards.length
+    ? cards.join("")
+    : `<div class="pattern-card"><strong>No patterns yet</strong><span>Tap cards or confirm a decoded meaning to help the app learn.</span></div>`;
 }
 
 function escapeHtml(value) {
@@ -367,6 +485,7 @@ function decodeIntent() {
   const object = objectInput.value.trim().toLowerCase();
   const gesture = gestureInput.value;
   const guesses = [];
+  lastDecodeContext = { sound, object, gesture };
 
   if (object.includes("cup") || object.includes("bottle") || sound.includes("wa") || sound.includes("oo")) {
     guesses.push("Maybe: water, thirsty, or help opening a drink.");
@@ -398,6 +517,11 @@ function decodeIntent() {
     <span>Repeat the attempt: "${sound || "sound"}". Name the clue: "${object || gesture}". Then ask one simple choice: "Do you want it, or need help?"</span>
     <div class="decode-list">${guesses.map((item) => `<p>${item}</p>`).join("")}</div>
   `;
+
+  const confirmOptions = ["water", "help", "break", "bathroom", "go outside", "all done"];
+  confirmRow.innerHTML = confirmOptions
+    .map((meaning) => `<button class="clue-chip" type="button" data-meaning="${meaning}">${meaning}</button>`)
+    .join("");
 }
 
 function renderRescue(name, change) {
@@ -450,8 +574,16 @@ function renderTranslation() {
 function renderPassport(template, name, sensory) {
   passportName.textContent = name;
   document.querySelector(".avatar").textContent = name.trim().charAt(0).toUpperCase() || "M";
+  const learnedPatterns = getTopPatterns();
+  const learnedText = learnedPatterns.length
+    ? learnedPatterns
+        .map((pattern) => `${pattern.sound || pattern.object || pattern.gesture} in ${pattern.context} often means ${pattern.meaning}`)
+        .join("; ")
+    : "No learned patterns yet. Confirm meanings in the Say tab as they happen.";
+
   const items = [
     ["How I communicate", "I may use sounds, word approximations, pointing, objects, gestures, or your hand to show what I mean."],
+    ["Learned patterns", learnedText],
     ["How to understand me", "Treat every sound or gesture as communication. Look at the object, place, routine, and my body clues."],
     ["What may be hard", template.forecast.map((item) => item[1]).join("; ")],
     ["Signs I am overwhelmed", template.feelings],
@@ -521,7 +653,10 @@ assistCards.addEventListener("click", (event) => {
   const button = event.target.closest("[data-card-index]");
   if (!button) return;
   const card = assistCardData[Number(button.dataset.cardIndex)];
-  if (card) speak(card.phrase);
+  if (card) {
+    recordEvent("card", card.label);
+    speak(card.phrase);
+  }
 });
 
 caregiverToggle.addEventListener("click", () => {
@@ -570,6 +705,20 @@ translateButton.addEventListener("click", renderTranslation);
 
 decodeButton.addEventListener("click", decodeIntent);
 
+confirmRow.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-meaning]");
+  if (!button) return;
+  confirmPattern(button.dataset.meaning);
+  button.textContent = "saved";
+});
+
+resetLearning.addEventListener("click", () => {
+  learningData = { events: [], patterns: {} };
+  saveLearningData();
+  renderPatterns();
+  renderPassport(activeTemplate, document.querySelector("#personName").value || "Maya", document.querySelector("#sensory").value || "clear space");
+});
+
 phraseColumns.addEventListener("click", (event) => {
   const button = event.target.closest("[data-starter]");
   if (!button) return;
@@ -612,3 +761,4 @@ renderPhraseBuilder();
 renderClues();
 decodeIntent();
 updateApp();
+renderPatterns();
