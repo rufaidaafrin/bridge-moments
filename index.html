@@ -23,6 +23,20 @@
             routines, sensory warnings, plan-change rescue, and caregiver setup.
           </p>
 
+          <div class="mascot-card" aria-hidden="true">
+            <svg viewBox="0 0 180 132">
+              <path class="mascot-cloud" d="M29 101c-13 0-22-8-22-19 0-10 8-18 20-18 3-17 17-29 35-29 14 0 27 7 34 19 5-3 11-5 18-5 18 0 32 13 32 29 0 14-10 24-24 24H29Z"/>
+              <path class="mascot-body" d="M61 35c-20 8-33 25-33 47 0 28 24 44 62 44s62-16 62-44c0-22-13-39-33-47"/>
+              <path class="mascot-ear" d="M61 39 49 13l30 13"/>
+              <path class="mascot-ear" d="m119 39 12-26-30 13"/>
+              <path class="mascot-belly" d="M64 87c5-14 16-23 26-23s21 9 26 23c-7 7-16 11-26 11s-19-4-26-11Z"/>
+              <path class="mascot-face" d="M76 58h.1M104 58h.1M79 75c6 8 16 8 22 0"/>
+              <path class="mascot-arm" d="M44 80 23 67M136 80l21-13"/>
+              <path class="mascot-star" d="m24 54 4 8 9 1-7 6 2 9-8-5-8 5 2-9-7-6 9-1 4-8Z"/>
+              <path class="mascot-star" d="m156 54 4 8 9 1-7 6 2 9-8-5-8 5 2-9-7-6 9-1 4-8Z"/>
+            </svg>
+          </div>
+
           <form id="momentForm" class="moment-form">
             <label for="scenario">Moment to prepare for</label>
             <textarea id="scenario" rows="5">Tomorrow we are going to the dentist. My sister gets scared when people touch her mouth and when tools make sounds.</textarea>
@@ -116,6 +130,17 @@
                   <option value="body">Body</option>
                   <option value="place">Place</option>
                   <option value="person">Person</option>
+                </select>
+                <label for="cardIcon">Cute icon</label>
+                <select id="cardIcon">
+                  <option value="buddy">Helper buddy</option>
+                  <option value="drop">Water drop</option>
+                  <option value="snack">Snack</option>
+                  <option value="heart">Comfort heart</option>
+                  <option value="home">Home</option>
+                  <option value="star">Good job star</option>
+                  <option value="phone">Phone</option>
+                  <option value="card">Simple card</option>
                 </select>
                 <label for="cardPhoto">Optional real photo</label>
                 <input id="cardPhoto" type="file" accept="image/*" />

@@ -152,6 +152,7 @@ const caregiverSetup = document.querySelector("#caregiverSetup");
 const cardLabel = document.querySelector("#cardLabel");
 const cardPhrase = document.querySelector("#cardPhrase");
 const cardKind = document.querySelector("#cardKind");
+const cardIcon = document.querySelector("#cardIcon");
 const cardPhoto = document.querySelector("#cardPhoto");
 const addCard = document.querySelector("#addCard");
 const currentStepIcon = document.querySelector("#currentStepIcon");
@@ -311,12 +312,17 @@ function escapeHtml(value) {
 
 function cuteIcon(name) {
   const icons = {
+    buddy: `<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M20 22c-6 3-10 10-10 18 0 11 9 18 22 18s22-7 22-18c0-8-4-15-10-18"/><path d="M21 24l-5-10 11 5M43 24l5-10-11 5"/><path d="M24 39c2 3 5 5 8 5s6-2 8-5"/><path d="M25 32h.1M39 32h.1"/><path d="M18 49c-4 0-7-2-9-5M46 49c4 0 7-2 9-5"/></svg>`,
     hands: `<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M14 28c-3-2-5-5-5-9 0-3 2-5 5-5 4 0 6 4 10 8 4-4 6-8 10-8 3 0 5 2 5 5 0 9-15 17-15 17s-5-3-10-8Z"/><path d="M12 34h24"/></svg>`,
     drop: `<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 6s12 13 12 23a12 12 0 0 1-24 0C12 19 24 6 24 6Z"/><path d="M18 31c2 3 5 5 9 4"/></svg>`,
     door: `<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M16 8h18v32H16z"/><path d="M34 40h6"/><path d="M29 24h1"/></svg>`,
     bandage: `<svg viewBox="0 0 48 48" aria-hidden="true"><rect x="10" y="17" width="28" height="14" rx="7" transform="rotate(-18 24 24)"/><path d="M21 20l6 8M27 18l6 8"/><path d="M22 25h.1M26 24h.1"/></svg>`,
     quiet: `<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M14 22v8h7l9 7V15l-9 7h-7Z"/><path d="M35 20l5 5M40 20l-5 5"/></svg>`,
     phone: `<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M17 8h14a3 3 0 0 1 3 3v26a3 3 0 0 1-3 3H17a3 3 0 0 1-3-3V11a3 3 0 0 1 3-3Z"/><path d="M21 34h6"/><path d="M19 13h10"/></svg>`,
+    snack: `<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M14 18h20l-2 22H16L14 18Z"/><path d="M18 18l3-8h12l1 8"/><path d="M20 27h8M20 33h6"/><path d="M35 14c3 1 5 3 5 6"/></svg>`,
+    heart: `<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 38S10 30 10 18c0-4 3-7 7-7 3 0 5 2 7 5 2-3 4-5 7-5 4 0 7 3 7 7 0 12-14 20-14 20Z"/><path d="M18 25h12"/></svg>`,
+    home: `<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M8 24 24 10l16 14"/><path d="M14 22v17h20V22"/><path d="M21 39V28h6v11"/></svg>`,
+    star: `<svg viewBox="0 0 48 48" aria-hidden="true"><path d="m24 7 5 11 12 1-9 8 3 12-11-6-11 6 3-12-9-8 12-1 5-11Z"/><path d="M18 28c3 3 9 3 12 0"/></svg>`,
     card: `<svg viewBox="0 0 48 48" aria-hidden="true"><rect x="9" y="12" width="30" height="24" rx="6"/><path d="M15 20h18M15 27h10"/></svg>`
   };
 
@@ -388,17 +394,28 @@ function renderAssistCards() {
       const visual = card.photo
         ? `<img src="${card.photo}" alt="">`
         : `${cuteIcon(card.icon)}<span>${escapeHtml(card.visual || card.label.slice(0, 6).toUpperCase())}</span>`;
+      const canDelete = index >= defaultAssistCards.length;
       return `
-        <button class="assist-card" type="button" data-card-index="${index}" data-kind="${card.kind}">
-          <span class="assist-visual" aria-hidden="true">${visual}</span>
-          <span>
-            <span class="assist-label">${escapeHtml(card.label)}</span>
-            <span class="assist-phrase">${escapeHtml(card.phrase)}</span>
-          </span>
-        </button>
+        <article class="assist-card" data-card-index="${index}" data-kind="${card.kind}">
+          <button class="assist-speak" type="button" data-speak-card="${index}">
+            <span class="assist-visual" aria-hidden="true">${visual}</span>
+            <span>
+              <span class="assist-label">${escapeHtml(card.label)}</span>
+              <span class="assist-phrase">${escapeHtml(card.phrase)}</span>
+            </span>
+          </button>
+          ${canDelete ? `<button class="delete-card" type="button" data-delete-card="${index}" aria-label="Delete ${escapeHtml(card.label)}">Delete</button>` : ""}
+        </article>
       `;
     })
     .join("");
+}
+
+function deleteCustomCard(index) {
+  if (index < defaultAssistCards.length) return;
+  assistCardData.splice(index, 1);
+  saveCustomCards();
+  renderAssistCards();
 }
 
 function renderCurrentStep() {
@@ -418,7 +435,7 @@ function addCustomCard(photo) {
     phrase,
     kind: cardKind.value,
     visual: label.slice(0, 6).toUpperCase(),
-    icon: "card",
+    icon: cardIcon.value,
     photo
   });
   saveCustomCards();
@@ -677,9 +694,15 @@ choiceGrid.addEventListener("click", (event) => {
 });
 
 assistCards.addEventListener("click", (event) => {
-  const button = event.target.closest("[data-card-index]");
+  const deleteButton = event.target.closest("[data-delete-card]");
+  if (deleteButton) {
+    deleteCustomCard(Number(deleteButton.dataset.deleteCard));
+    return;
+  }
+
+  const button = event.target.closest("[data-speak-card]");
   if (!button) return;
-  const card = assistCardData[Number(button.dataset.cardIndex)];
+  const card = assistCardData[Number(button.dataset.speakCard)];
   if (card) {
     recordEvent("card", card.label);
     speak(card.phrase);
