@@ -630,18 +630,30 @@ function updateApp() {
   renderCurrentStep();
 }
 
+function activateView(viewName) {
+  const tab = document.querySelector(`.tab[data-view="${viewName}"]`);
+  const view = document.querySelector(`#${viewName}View`);
+  if (!tab || !view) return;
+  document.querySelectorAll(".tab").forEach((item) => item.classList.remove("active"));
+  document.querySelectorAll(".view").forEach((item) => item.classList.remove("active"));
+  tab.classList.add("active");
+  view.classList.add("active");
+}
+
 document.querySelectorAll(".tab").forEach((tab) => {
-  tab.addEventListener("click", () => {
-    document.querySelectorAll(".tab").forEach((item) => item.classList.remove("active"));
-    document.querySelectorAll(".view").forEach((view) => view.classList.remove("active"));
-    tab.classList.add("active");
-    document.querySelector(`#${tab.dataset.view}View`).classList.add("active");
-  });
+  tab.addEventListener("click", () => activateView(tab.dataset.view));
 });
 
 form.addEventListener("submit", (event) => {
   event.preventDefault();
   updateApp();
+  activateView("story");
+  const button = form.querySelector(".primary-action");
+  const originalText = button.innerHTML;
+  button.innerHTML = `<span aria-hidden="true">+</span> Built`;
+  setTimeout(() => {
+    button.innerHTML = originalText;
+  }, 1200);
 });
 
 choiceGrid.addEventListener("click", (event) => {
