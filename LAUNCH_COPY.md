@@ -35,3 +35,6 @@ The app helps people with Down syndrome, autism, speech delays, or intellectual 
 One part I care about most is the speech/AAC bridge. Some people may communicate through sounds, pointing, bringing objects, pushing things away, or grabbing a caregiver's hand instead of using full words. Bridge Moments helps caregivers treat those actions as communication and think through what the person may need.
 
 I would love feedback from caregivers, educators, speech therapists, accessibility advocates, and anyone working in assistive technology.
+
+Feedback form:
+`/feedback.html`

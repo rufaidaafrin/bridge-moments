@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bridge Moments Feedback</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="feedback-page">
+      <section class="feedback-shell">
+        <div class="feedback-intro">
+          <div class="brand-lockup">
+            <div class="brand-mark" aria-hidden="true"><span></span><span></span></div>
+            <div>
+              <p class="eyebrow">Early prototype feedback</p>
+              <h1>Bridge Moments</h1>
+            </div>
+          </div>
+          <p>
+            Thank you for trying Bridge Moments. This form is for caregivers,
+            educators, SLPs, AAC users, accessibility advocates, and anyone with
+            lived experience who can help make the app more useful and respectful.
+          </p>
+          <p class="note">
+            Bridge Moments is not a medical tool or replacement for speech therapy.
+          </p>
+        </div>
+
+        <form
+          class="feedback-form"
+          name="bridge-moments-feedback"
+          method="POST"
+          data-netlify="true"
+          netlify-honeypot="bot-field"
+        >
+          <input type="hidden" name="form-name" value="bridge-moments-feedback" />
+          <p class="hidden-field">
+            <label>Do not fill this out: <input name="bot-field" /></label>
+          </p>
+
+          <label>
+            What is your role?
+            <select name="role" required>
+              <option value="">Choose one</option>
+              <option>Caregiver / parent</option>
+              <option>Sibling / family member</option>
+              <option>Teacher / special educator</option>
+              <option>Speech-language pathologist</option>
+              <option>Occupational therapist</option>
+              <option>AAC user</option>
+              <option>Disabled / neurodivergent person</option>
+              <option>Student</option>
+              <option>Other</option>
+            </select>
+          </label>
+
+          <label>
+            Who do you think this app could help?
+            <textarea name="who-could-this-help" rows="4" required></textarea>
+          </label>
+
+          <fieldset>
+            <legend>Which feature feels most useful?</legend>
+            <label><input type="checkbox" name="useful-feature" value="My Mode visual speech cards" /> My Mode visual speech cards</label>
+            <label><input type="checkbox" name="useful-feature" value="One-tap speech" /> One-tap speech</label>
+            <label><input type="checkbox" name="useful-feature" value="Custom cards with photos/icons" /> Custom cards with photos/icons</label>
+            <label><input type="checkbox" name="useful-feature" value="What happens next routine steps" /> What happens next routine steps</label>
+            <label><input type="checkbox" name="useful-feature" value="Speech/AAC intent decoder" /> Speech/AAC intent decoder</label>
+            <label><input type="checkbox" name="useful-feature" value="Learning from patterns" /> Learning from patterns</label>
+            <label><input type="checkbox" name="useful-feature" value="My Voice Passport" /> My Voice Passport</label>
+          </fieldset>
+
+          <label>
+            What felt confusing or hard to use?
+            <textarea name="confusing" rows="4"></textarea>
+          </label>
+
+          <label>
+            What should I add, remove, or change next?
+            <textarea name="next-steps" rows="4" required></textarea>
+          </label>
+
+          <label>
+            Would you use or recommend something like this?
+            <select name="recommend" required>
+              <option value="">Choose one</option>
+              <option>Yes</option>
+              <option>Maybe</option>
+              <option>No</option>
+            </select>
+          </label>
+
+          <label>
+            Any accessibility concerns?
+            <textarea name="accessibility-concerns" rows="4"></textarea>
+          </label>
+
+          <label>
+            Any other advice?
+            <textarea name="other-advice" rows="4"></textarea>
+          </label>
+
+          <label>
+            Optional email if you are open to follow-up
+            <input type="email" name="email" placeholder="name@example.com" />
+          </label>
+
+          <button class="primary-action" type="submit">
+            <span aria-hidden="true">+</span>
+            Send feedback
+          </button>
+        </form>
+      </section>
+    </main>
+  </body>
+</html>
