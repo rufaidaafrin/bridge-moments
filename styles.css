@@ -1,19 +1,21 @@
 :root {
   color-scheme: light;
-  --ink: #16211f;
-  --muted: #5e6b67;
-  --paper: #f8f6ef;
-  --panel: #fffdf7;
-  --line: #d8d4c7;
-  --teal: #176b68;
-  --teal-2: #d9efea;
-  --coral: #d95d4f;
-  --coral-2: #ffe3dc;
-  --gold: #d89a2b;
+  --ink: #2b2028;
+  --muted: #745f6d;
+  --paper: #fff4f8;
+  --panel: #fffafb;
+  --line: #edd6df;
+  --teal: #5d8f89;
+  --teal-2: #dff5f0;
+  --coral: #d86f8f;
+  --coral-2: #ffe3ed;
+  --gold: #d99f54;
   --gold-2: #fff0c9;
-  --blue: #4864a8;
-  --blue-2: #e1e8ff;
-  --shadow: 0 22px 60px rgba(24, 30, 28, 0.14);
+  --blue: #7a77b8;
+  --blue-2: #ece9ff;
+  --pink: #f7b6cc;
+  --pink-2: #ffeaf2;
+  --shadow: 0 22px 60px rgba(128, 74, 96, 0.16);
 }
 
 * {
@@ -28,9 +30,9 @@ body {
     sans-serif;
   color: var(--ink);
   background:
-    radial-gradient(circle at 10% 12%, rgba(217, 93, 79, 0.18), transparent 28%),
-    radial-gradient(circle at 88% 10%, rgba(72, 100, 168, 0.16), transparent 26%),
-    linear-gradient(135deg, #f6efe2 0%, #eef6f3 100%);
+    radial-gradient(circle at 14% 12%, rgba(247, 182, 204, 0.34), transparent 28%),
+    radial-gradient(circle at 88% 10%, rgba(236, 233, 255, 0.75), transparent 26%),
+    linear-gradient(135deg, #fff0f6 0%, #fffaf2 46%, #eef9f6 100%);
 }
 
 button,
@@ -52,15 +54,19 @@ textarea {
   min-height: min(780px, calc(100vh - 56px));
   display: grid;
   grid-template-columns: 386px 1fr;
-  background: rgba(255, 253, 247, 0.9);
-  border: 1px solid rgba(216, 212, 199, 0.9);
+  background: rgba(255, 250, 251, 0.94);
+  border: 1px solid rgba(237, 214, 223, 0.95);
+  border-radius: 8px;
   box-shadow: var(--shadow);
   overflow: hidden;
 }
 
 .side-panel {
   padding: 30px;
-  background: #f2eadb;
+  background:
+    linear-gradient(135deg, rgba(255, 234, 242, 0.92), rgba(255, 246, 225, 0.86)),
+    radial-gradient(circle, rgba(255, 255, 255, 0.65) 1px, transparent 1px);
+  background-size: auto, 18px 18px;
   border-right: 1px solid var(--line);
 }
 
@@ -83,7 +89,9 @@ textarea {
   position: relative;
   display: grid;
   place-items: center;
-  background: var(--teal);
+  background: var(--coral);
+  border-radius: 8px;
+  box-shadow: 0 8px 18px rgba(216, 111, 143, 0.24);
 }
 
 .brand-mark span {
@@ -96,13 +104,13 @@ textarea {
 }
 
 .brand-mark span + span {
-  background: var(--gold);
+  background: #fff0c9;
   transform: rotate(22deg) translateY(10px);
 }
 
 .eyebrow {
   margin: 0 0 6px;
-  color: var(--teal);
+  color: #9f4f70;
   font-size: 0.78rem;
   font-weight: 800;
   letter-spacing: 0;
@@ -154,18 +162,19 @@ textarea,
 input,
 select {
   width: 100%;
-  border: 1px solid #c9c3b5;
-  background: #fffdf7;
+  border: 1px solid var(--line);
+  background: #fffdfb;
   color: var(--ink);
   padding: 12px 13px;
+  border-radius: 8px;
   outline: none;
 }
 
 textarea:focus,
 input:focus,
 select:focus {
-  border-color: var(--teal);
-  box-shadow: 0 0 0 3px rgba(23, 107, 104, 0.15);
+  border-color: var(--coral);
+  box-shadow: 0 0 0 3px rgba(216, 111, 143, 0.18);
 }
 
 .field-grid {
@@ -178,7 +187,8 @@ select:focus {
   min-height: 52px;
   border: 0;
   color: white;
-  background: var(--teal);
+  background: linear-gradient(135deg, #d86f8f, #b45f93);
+  border-radius: 8px;
   font-weight: 850;
   cursor: pointer;
   display: inline-flex;
@@ -205,7 +215,9 @@ select:focus {
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
   border: 1px solid var(--line);
-  background: #f5f1e8;
+  background: #fff1f6;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
 .tab {
@@ -219,7 +231,7 @@ select:focus {
 }
 
 .tab.active {
-  background: var(--ink);
+  background: #2b2028;
   color: white;
 }
 
@@ -235,8 +247,9 @@ select:focus {
   width: 48px;
   aspect-ratio: 1;
   border: 1px solid var(--line);
-  background: var(--teal-2);
-  color: var(--teal);
+  background: var(--pink-2);
+  color: #9f4f70;
+  border-radius: 8px;
   cursor: pointer;
   font-weight: 900;
 }
@@ -276,7 +289,8 @@ select:focus {
 .learning-panel,
 .pattern-card {
   border: 1px solid var(--line);
-  background: #fffdf7;
+  background: #fffdfb;
+  border-radius: 8px;
 }
 
 .assist-layout {
@@ -306,19 +320,46 @@ select:focus {
   gap: 12px;
   cursor: pointer;
   text-align: left;
+  box-shadow: 0 10px 24px rgba(128, 74, 96, 0.08);
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.assist-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 30px rgba(128, 74, 96, 0.13);
 }
 
 .assist-visual {
   min-height: 96px;
   display: grid;
   place-items: center;
+  gap: 4px;
   overflow: hidden;
   background: var(--teal-2);
-  border: 3px solid var(--ink);
+  border: 2px solid rgba(43, 32, 40, 0.82);
+  border-radius: 8px;
   color: var(--ink);
-  font-size: 1.15rem;
+  font-size: 0.86rem;
   font-weight: 950;
   text-align: center;
+}
+
+.assist-icon {
+  width: 42px;
+  height: 42px;
+  display: block;
+}
+
+.assist-icon svg {
+  width: 100%;
+  height: 100%;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2.25;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .assist-visual img {
@@ -328,7 +369,7 @@ select:focus {
 }
 
 .assist-card[data-kind="body"] .assist-visual {
-  background: var(--coral-2);
+  background: var(--pink-2);
 }
 
 .assist-card[data-kind="place"] .assist-visual {
@@ -371,7 +412,7 @@ select:focus {
 
 .pattern-card {
   padding: 14px;
-  background: #f7f2e7;
+  background: #fff3f7;
 }
 
 .pattern-card strong {
@@ -397,7 +438,8 @@ select:focus {
   display: grid;
   place-items: center;
   background: var(--gold-2);
-  border: 3px solid var(--ink);
+  border: 2px solid var(--ink);
+  border-radius: 8px;
   font-size: 2rem;
   font-weight: 950;
 }
@@ -438,8 +480,9 @@ select:focus {
 .pictogram {
   width: 70px;
   aspect-ratio: 1;
-  border: 3px solid currentColor;
+  border: 2px solid currentColor;
   background: var(--gold-2);
+  border-radius: 8px;
   position: relative;
   overflow: hidden;
 }
@@ -535,7 +578,7 @@ select:focus {
 
 .story-card:nth-child(3n) .pictogram,
 .choice-card:nth-child(3n) .choice-icon {
-  background: var(--coral-2);
+  background: var(--pink-2);
 }
 
 .step-number {
@@ -599,6 +642,7 @@ select:focus {
   padding: 14px;
   background: var(--gold-2);
   border: 1px solid #e1ca8d;
+  border-radius: 8px;
 }
 
 .first-then div + div {
@@ -620,11 +664,12 @@ select:focus {
 .small-action {
   min-height: 40px;
   border: 1px solid var(--line);
-  background: var(--ink);
+  background: #2b2028;
   color: white;
   padding: 0 18px;
   font-weight: 850;
   cursor: pointer;
+  border-radius: 8px;
 }
 
 .rescue-layout,
@@ -650,12 +695,13 @@ select:focus {
   place-items: center;
   margin-bottom: 16px;
   padding: 16px;
-  background: var(--teal);
+  background: linear-gradient(135deg, #d86f8f, #7a77b8);
   color: white;
   font-size: 2rem;
   line-height: 1.15;
   font-weight: 900;
   text-align: center;
+  border-radius: 8px;
 }
 
 .phrase-columns {
@@ -679,17 +725,18 @@ select:focus {
 .clue-chip {
   min-height: 48px;
   border: 1px solid var(--line);
-  background: #f7f2e7;
+  background: #fff3f7;
   color: var(--ink);
   font-weight: 850;
   cursor: pointer;
   text-align: center;
+  border-radius: 8px;
 }
 
 .word-chip.active,
 .clue-chip.active {
-  background: var(--gold-2);
-  border-color: var(--gold);
+  background: var(--pink-2);
+  border-color: var(--coral);
 }
 
 .clue-grid {
@@ -718,7 +765,7 @@ select:focus {
 }
 
 .decode-output {
-  background: var(--gold-2);
+  background: #fff3d6;
 }
 
 .decode-output strong,
@@ -763,7 +810,7 @@ select:focus {
   display: grid;
   place-items: center;
   margin-bottom: 14px;
-  background: var(--teal);
+  background: var(--coral);
   color: white;
   font-weight: 900;
 }
@@ -774,12 +821,12 @@ select:focus {
 
 .translation-output {
   padding: 14px;
-  background: #f7f2e7;
+  background: #fff3f7;
 }
 
 .simple-line {
   padding: 14px;
-  background: #fffdf7;
+  background: #fffdfb;
   color: var(--ink);
   font-weight: 750;
 }
@@ -798,6 +845,7 @@ select:focus {
   gap: 14px;
   text-align: left;
   cursor: pointer;
+  box-shadow: 0 8px 20px rgba(128, 74, 96, 0.07);
 }
 
 .choice-icon,
@@ -807,6 +855,7 @@ select:focus {
   background: var(--teal-2);
   font-size: 1rem;
   letter-spacing: 0;
+  border-radius: 8px;
 }
 
 .passport-card {
@@ -829,8 +878,9 @@ select:focus {
 
 .passport-item {
   padding: 14px;
-  background: #f7f2e7;
-  border-left: 5px solid var(--teal);
+  background: #fff3f7;
+  border-left: 5px solid var(--coral);
+  border-radius: 8px;
 }
 
 .passport-item strong {

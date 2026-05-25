@@ -90,12 +90,12 @@ const baseChoices = [
 ];
 
 const defaultAssistCards = [
-  { label: "Help", phrase: "I need help. Please stay with me.", visual: "HELP", kind: "body" },
-  { label: "Water", phrase: "I want water.", visual: "WATER", kind: "need" },
-  { label: "Bathroom", phrase: "I need the bathroom.", visual: "BATH", kind: "place" },
-  { label: "Hurt", phrase: "Something hurts. Please help me.", visual: "HURT", kind: "body" },
-  { label: "Too loud", phrase: "It is too loud. I need quiet.", visual: "LOUD", kind: "body" },
-  { label: "Call family", phrase: "Please call my family.", visual: "CALL", kind: "person" }
+  { label: "Help", phrase: "I need help. Please stay with me.", visual: "HELP", kind: "body", icon: "hands" },
+  { label: "Water", phrase: "I want water.", visual: "WATER", kind: "need", icon: "drop" },
+  { label: "Bathroom", phrase: "I need the bathroom.", visual: "BATH", kind: "place", icon: "door" },
+  { label: "Hurt", phrase: "Something hurts. Please help me.", visual: "HURT", kind: "body", icon: "bandage" },
+  { label: "Too loud", phrase: "It is too loud. I need quiet.", visual: "LOUD", kind: "body", icon: "quiet" },
+  { label: "Call family", phrase: "Please call my family.", visual: "CALL", kind: "person", icon: "phone" }
 ];
 
 const phraseParts = {
@@ -309,6 +309,20 @@ function escapeHtml(value) {
     .replaceAll("'", "&#039;");
 }
 
+function cuteIcon(name) {
+  const icons = {
+    hands: `<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M14 28c-3-2-5-5-5-9 0-3 2-5 5-5 4 0 6 4 10 8 4-4 6-8 10-8 3 0 5 2 5 5 0 9-15 17-15 17s-5-3-10-8Z"/><path d="M12 34h24"/></svg>`,
+    drop: `<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 6s12 13 12 23a12 12 0 0 1-24 0C12 19 24 6 24 6Z"/><path d="M18 31c2 3 5 5 9 4"/></svg>`,
+    door: `<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M16 8h18v32H16z"/><path d="M34 40h6"/><path d="M29 24h1"/></svg>`,
+    bandage: `<svg viewBox="0 0 48 48" aria-hidden="true"><rect x="10" y="17" width="28" height="14" rx="7" transform="rotate(-18 24 24)"/><path d="M21 20l6 8M27 18l6 8"/><path d="M22 25h.1M26 24h.1"/></svg>`,
+    quiet: `<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M14 22v8h7l9 7V15l-9 7h-7Z"/><path d="M35 20l5 5M40 20l-5 5"/></svg>`,
+    phone: `<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M17 8h14a3 3 0 0 1 3 3v26a3 3 0 0 1-3 3H17a3 3 0 0 1-3-3V11a3 3 0 0 1 3-3Z"/><path d="M21 34h6"/><path d="M19 13h10"/></svg>`,
+    card: `<svg viewBox="0 0 48 48" aria-hidden="true"><rect x="9" y="12" width="30" height="24" rx="6"/><path d="M15 20h18M15 27h10"/></svg>`
+  };
+
+  return `<span class="assist-icon">${icons[name] || icons.card}</span>`;
+}
+
 function chooseTemplate(text) {
   const normalized = text.toLowerCase();
   if (normalized.includes("dentist") || normalized.includes("teeth") || normalized.includes("mouth")) return templates.dentist;
@@ -373,7 +387,7 @@ function renderAssistCards() {
     .map((card, index) => {
       const visual = card.photo
         ? `<img src="${card.photo}" alt="">`
-        : `<span>${escapeHtml(card.visual || card.label.slice(0, 6).toUpperCase())}</span>`;
+        : `${cuteIcon(card.icon)}<span>${escapeHtml(card.visual || card.label.slice(0, 6).toUpperCase())}</span>`;
       return `
         <button class="assist-card" type="button" data-card-index="${index}" data-kind="${card.kind}">
           <span class="assist-visual" aria-hidden="true">${visual}</span>
@@ -404,6 +418,7 @@ function addCustomCard(photo) {
     phrase,
     kind: cardKind.value,
     visual: label.slice(0, 6).toUpperCase(),
+    icon: "card",
     photo
   });
   saveCustomCards();
