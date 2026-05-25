@@ -89,6 +89,15 @@ const baseChoices = [
   ["All done", "I am finished.", "OK"]
 ];
 
+const defaultAssistCards = [
+  { label: "Help", phrase: "I need help. Please stay with me.", visual: "HELP", kind: "body" },
+  { label: "Water", phrase: "I want water.", visual: "WATER", kind: "need" },
+  { label: "Bathroom", phrase: "I need the bathroom.", visual: "BATH", kind: "place" },
+  { label: "Hurt", phrase: "Something hurts. Please help me.", visual: "HURT", kind: "body" },
+  { label: "Too loud", phrase: "It is too loud. I need quiet.", visual: "LOUD", kind: "body" },
+  { label: "Call family", phrase: "Please call my family.", visual: "CALL", kind: "person" }
+];
+
 const phraseParts = {
   "I feel": ["hurt", "scared", "mad", "tired", "sick", "confused"],
   "I want": ["water", "food", "home", "music", "toy", "hug"],
@@ -136,11 +145,51 @@ const objectInput = document.querySelector("#objectInput");
 const gestureInput = document.querySelector("#gestureInput");
 const decodeButton = document.querySelector("#decodeButton");
 const decodeOutput = document.querySelector("#decodeOutput");
+const assistCards = document.querySelector("#assistCards");
+const caregiverToggle = document.querySelector("#caregiverToggle");
+const caregiverSetup = document.querySelector("#caregiverSetup");
+const cardLabel = document.querySelector("#cardLabel");
+const cardPhrase = document.querySelector("#cardPhrase");
+const cardKind = document.querySelector("#cardKind");
+const cardPhoto = document.querySelector("#cardPhoto");
+const addCard = document.querySelector("#addCard");
+const currentStepIcon = document.querySelector("#currentStepIcon");
+const currentStepTitle = document.querySelector("#currentStepTitle");
+const currentStepText = document.querySelector("#currentStepText");
+const prevStep = document.querySelector("#prevStep");
+const nextStep = document.querySelector("#nextStep");
+const speakStep = document.querySelector("#speakStep");
 
 let currentPassportText = "";
 let selectedStarter = "I want";
 let selectedWord = "water";
 let selectedClues = new Set();
+let assistCardData = loadAssistCards();
+let activeTemplate = templates.dentist;
+let currentStepIndex = 0;
+
+function loadAssistCards() {
+  try {
+    const saved = JSON.parse(localStorage.getItem("bridgeMomentsCards") || "[]");
+    return [...defaultAssistCards, ...saved];
+  } catch {
+    return [...defaultAssistCards];
+  }
+}
+
+function saveCustomCards() {
+  const custom = assistCardData.slice(defaultAssistCards.length);
+  localStorage.setItem("bridgeMomentsCards", JSON.stringify(custom));
+}
+
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
 
 function chooseTemplate(text) {
   const normalized = text.toLowerCase();
@@ -199,6 +248,49 @@ function renderChoices() {
       </button>
     `)
     .join("");
+}
+
+function renderAssistCards() {
+  assistCards.innerHTML = assistCardData
+    .map((card, index) => {
+      const visual = card.photo
+        ? `<img src="${card.photo}" alt="">`
+        : `<span>${escapeHtml(card.visual || card.label.slice(0, 6).toUpperCase())}</span>`;
+      return `
+        <button class="assist-card" type="button" data-card-index="${index}" data-kind="${card.kind}">
+          <span class="assist-visual" aria-hidden="true">${visual}</span>
+          <span>
+            <span class="assist-label">${escapeHtml(card.label)}</span>
+            <span class="assist-phrase">${escapeHtml(card.phrase)}</span>
+          </span>
+        </button>
+      `;
+    })
+    .join("");
+}
+
+function renderCurrentStep() {
+  const step = activeTemplate.steps[currentStepIndex] || activeTemplate.steps[0];
+  currentStepIcon.textContent = String(currentStepIndex + 1);
+  currentStepTitle.textContent = step[0];
+  currentStepText.textContent = step[1];
+}
+
+function addCustomCard(photo) {
+  const label = cardLabel.value.trim();
+  const phrase = cardPhrase.value.trim();
+  if (!label || !phrase) return;
+
+  assistCardData.push({
+    label,
+    phrase,
+    kind: cardKind.value,
+    visual: label.slice(0, 6).toUpperCase(),
+    photo
+  });
+  saveCustomCards();
+  renderAssistCards();
+  cardPhoto.value = "";
 }
 
 function renderPhraseBuilder() {
@@ -395,12 +487,15 @@ function updateApp() {
   const sensory = document.querySelector("#sensory").value || "clear space";
   const change = document.querySelector("#changeInput").value || "The plan changed.";
   const template = chooseTemplate(scenario);
+  activeTemplate = template;
+  currentStepIndex = 0;
 
   renderStory(template, name, style);
   renderForecast(template);
   renderRescue(name, change);
   renderPassport(template, name, sensory);
   renderTranslation();
+  renderCurrentStep();
 }
 
 document.querySelectorAll(".tab").forEach((tab) => {
@@ -420,6 +515,45 @@ form.addEventListener("submit", (event) => {
 choiceGrid.addEventListener("click", (event) => {
   const card = event.target.closest("[data-say]");
   if (card) speak(card.dataset.say);
+});
+
+assistCards.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-card-index]");
+  if (!button) return;
+  const card = assistCardData[Number(button.dataset.cardIndex)];
+  if (card) speak(card.phrase);
+});
+
+caregiverToggle.addEventListener("click", () => {
+  caregiverSetup.classList.toggle("open");
+});
+
+addCard.addEventListener("click", () => {
+  const file = cardPhoto.files && cardPhoto.files[0];
+  if (!file) {
+    addCustomCard("");
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.addEventListener("load", () => addCustomCard(reader.result));
+  reader.readAsDataURL(file);
+});
+
+prevStep.addEventListener("click", () => {
+  currentStepIndex = Math.max(0, currentStepIndex - 1);
+  renderCurrentStep();
+  speak(currentStepText.textContent);
+});
+
+nextStep.addEventListener("click", () => {
+  currentStepIndex = Math.min(activeTemplate.steps.length - 1, currentStepIndex + 1);
+  renderCurrentStep();
+  speak(currentStepText.textContent);
+});
+
+speakStep.addEventListener("click", () => {
+  speak(`${currentStepTitle.textContent}. ${currentStepText.textContent}`);
 });
 
 readStory.addEventListener("click", () => {
@@ -473,6 +607,7 @@ copyPassport.addEventListener("click", async () => {
 });
 
 renderChoices();
+renderAssistCards();
 renderPhraseBuilder();
 renderClues();
 decodeIntent();

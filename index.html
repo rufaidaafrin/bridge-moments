@@ -19,9 +19,8 @@
           </div>
 
           <p class="mission">
-            An AI transition translator for real-life moments: previews, sensory
-            warnings, speech support, plan-change rescue, communication cards,
-            and support notes.
+            An AI independence companion with big visual speech cards, simple
+            routines, sensory warnings, plan-change rescue, and caregiver setup.
           </p>
 
           <form id="momentForm" class="moment-form">
@@ -58,7 +57,8 @@
 
         <section class="main-panel">
           <nav class="tabs" aria-label="Bridge Moments views">
-            <button class="tab active" data-view="story" type="button">Story</button>
+            <button class="tab active" data-view="assist" type="button">My Mode</button>
+            <button class="tab" data-view="story" type="button">Story</button>
             <button class="tab" data-view="rescue" type="button">Rescue</button>
             <button class="tab" data-view="translate" type="button">Translate</button>
             <button class="tab" data-view="say" type="button">Say</button>
@@ -66,7 +66,60 @@
             <button class="tab" data-view="passport" type="button">Passport</button>
           </nav>
 
-          <section class="view active" id="storyView">
+          <section class="view active" id="assistView">
+            <div class="view-header">
+              <div>
+                <p class="eyebrow">Independent use</p>
+                <h2>Tap to speak or see next step</h2>
+              </div>
+              <button class="small-action" id="caregiverToggle" type="button">Setup</button>
+            </div>
+
+            <div class="assist-layout">
+              <section class="person-mode" aria-label="Personal communication cards">
+                <div class="assist-card-grid" id="assistCards"></div>
+                <article class="now-step">
+                  <p class="eyebrow">What happens next</p>
+                  <div class="now-step-body">
+                    <div class="step-visual" id="currentStepIcon" aria-hidden="true">1</div>
+                    <div>
+                      <h3 id="currentStepTitle">Drive there</h3>
+                      <p id="currentStepText">We will ride to the dentist.</p>
+                    </div>
+                  </div>
+                  <div class="step-controls">
+                    <button class="small-action" id="prevStep" type="button">Back</button>
+                    <button class="small-action" id="speakStep" type="button">Speak</button>
+                    <button class="small-action" id="nextStep" type="button">Next</button>
+                  </div>
+                </article>
+              </section>
+
+              <aside class="caregiver-setup" id="caregiverSetup">
+                <p class="eyebrow">Caregiver setup</p>
+                <h3>Add a custom card</h3>
+                <label for="cardLabel">Card label</label>
+                <input id="cardLabel" value="Mom" />
+                <label for="cardPhrase">Spoken phrase</label>
+                <input id="cardPhrase" value="Please call my mom." />
+                <label for="cardKind">Visual color</label>
+                <select id="cardKind">
+                  <option value="need">Need</option>
+                  <option value="body">Body</option>
+                  <option value="place">Place</option>
+                  <option value="person">Person</option>
+                </select>
+                <label for="cardPhoto">Optional real photo</label>
+                <input id="cardPhoto" type="file" accept="image/*" />
+                <button class="primary-action" id="addCard" type="button">
+                  <span aria-hidden="true">+</span>
+                  Add card
+                </button>
+              </aside>
+            </div>
+          </section>
+
+          <section class="view" id="storyView">
             <div class="view-header">
               <div>
                 <p class="eyebrow">Personal visual preview</p>
