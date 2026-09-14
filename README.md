@@ -1,10 +1,12 @@
 # Bridge Moments
 
-Bridge Moments is a static web prototype for an AI-assisted independence, transition, and speech/AAC support tool. It helps people use big text-and-visual cards to speak needs out loud, while caregivers can set up custom cards with photos, simple routines, sensory forecasts, plan-change rescue scripts, intent decoding for sounds/gestures/objects, adaptive pattern learning, easy-language translations, and a shareable support card.
+Bridge Moments is a static web prototype for an adaptive, rule-based independence, transition, and speech/AAC support tool. It helps people use big text-and-visual cards to speak needs out loud, while caregivers can set up custom cards with photos, simple routines, sensory forecasts, plan-change rescue scripts, intent decoding for sounds/gestures/objects, adaptive pattern learning, easy-language translations, and a shareable support card.
+
+Note: Bridge Moments uses rule-based templates and the browser's built-in speech synthesis, not a connected AI model, so it works offline and nothing about the person using it ever leaves the device. Custom cards and learned patterns are saved only in that browser/device and will not sync to another phone or tablet.
 
 Open `index.html` in a browser to run the project.
 
-Open `feedback.html` to collect early user feedback. If deployed on Netlify, the form can be captured with Netlify Forms.
+Open `feedback.html` to collect early user feedback — it emails submissions straight to the project owner via FormSubmit, no separate backend needed.
 
 ## Showcase description
 
