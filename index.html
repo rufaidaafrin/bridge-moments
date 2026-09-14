@@ -7,6 +7,30 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
+        <div class="tutorial-overlay" id="tutorialOverlay" role="dialog" aria-modal="true" aria-labelledby="tutorialTitle">
+        <div class="tutorial-card">
+          <button class="tutorial-close" id="tutorialClose" type="button" aria-label="Close tutorial">Close</button>
+          <p class="eyebrow">Welcome</p>
+          <h2 id="tutorialTitle">What Bridge Moments does</h2>
+          <p>
+            Bridge Moments turns a tricky upcoming moment - a dentist visit, a haircut, a school change - into simple visual steps, sensory warnings, and ready-made phrases. Here is what each tab does:
+          </p>
+          <ul class="tutorial-list">
+            <li><strong>My Mode</strong> - big tap-to-speak cards for independent use, plus a step-by-step "what happens next" tracker.</li>
+            <li><strong>Story</strong> - a picture-by-picture walkthrough of the moment, with a sensory forecast.</li>
+            <li><strong>Rescue</strong> - a calm script for when the plan suddenly changes.</li>
+            <li><strong>Translate</strong> - turns a confusing sign or instruction into short, simple sentences.</li>
+            <li><strong>Say</strong> - builds simple phrases and helps a caregiver guess what an unclear sound, point, or gesture might mean.</li>
+            <li><strong>Choices</strong> - a communication board of common needs to tap and speak during the moment.</li>
+            <li><strong>Passport</strong> - a one-page support card to copy or print for a teacher, substitute, or doctor's office.</li>
+          </ul>
+          <p>
+            Start on the left: describe the moment, then press <strong>Build support kit</strong> to fill in every tab.
+          </p>
+          <button class="primary-action" id="tutorialStart" type="button">Got it, let's start</button>
+        </div>
+      </div>
+
     <main class="app-shell">
       <section class="workspace" aria-label="Bridge Moments app">
         <aside class="side-panel">
@@ -15,6 +39,14 @@
             <div>
               <p class="eyebrow">What happens next?</p>
               <h1>Bridge Moments</h1>
+            </div>
+          </div>
+
+          <div class="header-tools">
+            <button class="small-action" id="helpButton" type="button">How this works</button>
+            <div class="text-size-controls" role="group" aria-label="Text size">
+              <button class="small-action" id="textSmaller" type="button" aria-label="Decrease text size">A-</button>
+              <button class="small-action" id="textLarger" type="button" aria-label="Increase text size">A+</button>
             </div>
           </div>
 
@@ -35,6 +67,15 @@
               <path class="mascot-star" d="m24 54 4 8 9 1-7 6 2 9-8-5-8 5 2-9-7-6 9-1 4-8Z"/>
               <path class="mascot-star" d="m156 54 4 8 9 1-7 6 2 9-8-5-8 5 2-9-7-6 9-1 4-8Z"/>
             </svg>
+          </div>
+
+          <div class="example-switcher">
+            <p class="note">New here? Try a ready-made example, or write your own moment below.</p>
+            <div class="example-buttons">
+              <button class="small-action" type="button" data-example="dentist">Dentist example</button>
+              <button class="small-action" type="button" data-example="haircut">Haircut example</button>
+              <button class="small-action" type="button" data-example="school">School example</button>
+            </div>
           </div>
 
           <form id="momentForm" class="moment-form">
@@ -275,7 +316,8 @@
                 <p class="eyebrow">Shareable support card</p>
                 <h2>My Voice Passport</h2>
               </div>
-              <button class="small-action" id="copyPassport" type="button">Copy</button>
+            <button class="small-action" id="copyPassport" type="button">Copy</button>
+            <button class="small-action" id="printPassport" type="button">Print</button>
             </div>
             <article class="passport-card">
               <div class="passport-top">
