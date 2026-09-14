@@ -812,3 +812,90 @@ renderClues();
 decodeIntent();
 updateApp();
 renderPatterns();
+
+const tutorialOverlay = document.querySelector("#tutorialOverlay");
+const tutorialClose = document.querySelector("#tutorialClose");
+const tutorialStart = document.querySelector("#tutorialStart");
+const helpButton = document.querySelector("#helpButton");
+
+function openTutorial() {
+  tutorialOverlay.classList.add("open");
+}
+
+function closeTutorial() {
+  tutorialOverlay.classList.remove("open");
+  localStorage.setItem("bridgeMomentsTutorialSeen", "yes");
+}
+
+tutorialClose.addEventListener("click", closeTutorial);
+tutorialStart.addEventListener("click", closeTutorial);
+helpButton.addEventListener("click", openTutorial);
+
+if (!localStorage.getItem("bridgeMomentsTutorialSeen")) {
+  openTutorial();
+}
+
+const textSmaller = document.querySelector("#textSmaller");
+const textLarger = document.querySelector("#textLarger");
+const textSizeClasses = ["text-normal", "text-large", "text-xlarge"];
+
+function applyTextSize(size) {
+  textSizeClasses.forEach((cls) => document.documentElement.classList.remove(cls));
+  document.documentElement.classList.add(size);
+  localStorage.setItem("bridgeMomentsTextSize", size);
+}
+
+function loadTextSize() {
+  const saved = localStorage.getItem("bridgeMomentsTextSize") || "text-normal";
+  applyTextSize(saved);
+}
+
+textLarger.addEventListener("click", () => {
+  const current = textSizeClasses.find((cls) => document.documentElement.classList.contains(cls)) || "text-normal";
+  const index = Math.min(textSizeClasses.length - 1, textSizeClasses.indexOf(current) + 1);
+  applyTextSize(textSizeClasses[index]);
+});
+
+textSmaller.addEventListener("click", () => {
+  const current = textSizeClasses.find((cls) => document.documentElement.classList.contains(cls)) || "text-normal";
+  const index = Math.max(0, textSizeClasses.indexOf(current) - 1);
+  applyTextSize(textSizeClasses[index]);
+});
+
+loadTextSize();
+
+const exampleMoments = {
+  dentist: {
+    scenario: "Tomorrow we are going to the dentist. My sister gets scared when people touch her mouth and when tools make sounds.",
+    sensory: "loud sounds, people too close, waiting",
+    change: "The appointment is delayed and we have to wait 20 minutes."
+  },
+  haircut: {
+    scenario: "We are getting a haircut this weekend. He does not like the cape or the sound of clippers near his ears.",
+    sensory: "clippers, tight cape, hair on skin",
+    change: "The stylist we usually see is out and someone new will cut his hair."
+  },
+  school: {
+    scenario: "There is a substitute teacher and a schedule change at school tomorrow.",
+    sensory: "crowded hallway, bell sounds, unclear schedule",
+    change: "The fire drill happens at an unexpected time."
+  }
+};
+
+document.querySelectorAll("[data-example]").forEach((button) => {
+  button.addEventListener("click", () => {
+    const example = exampleMoments[button.dataset.example];
+    if (!example) return;
+    document.querySelector("#scenario").value = example.scenario;
+    document.querySelector("#sensory").value = example.sensory;
+    document.querySelector("#changeInput").value = example.change;
+    updateApp();
+    activateView("story");
+  });
+});
+
+const printPassport = document.querySelector("#printPassport");
+printPassport.addEventListener("click", () => {
+  activateView("passport");
+  window.print();
+});
